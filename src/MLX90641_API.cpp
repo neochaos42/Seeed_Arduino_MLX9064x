@@ -17,24 +17,7 @@
 #include <MLX9064X_I2C_Driver.h>
 #include <MLX90641_API.h>
 #include <math.h>
-
-void MLX90641_ExtractVDDParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractPTATParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractGainParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractTgcParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractEmissivityParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractResolutionParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractKsTaParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractKsToParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractAlphaParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractOffsetParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractKtaPixelParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractKvPixelParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-void MLX90641_ExtractCPParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
-int MLX90641_ExtractDeviatingPixels(uint16_t *eeData, paramsMLX90641 *mlx90641);
-int MLX90641_HammingDecode(uint16_t *eeData);  
  
-
 //------------------------------------------------------------------------------
   
 int MLX90641_DumpEE(uint8_t slaveAddr, uint16_t *eeData)
@@ -753,286 +736,23 @@ void MLX90641_ExtractPTATParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
     if(KvPTAT > 1023)
     {
         KvPTAT = KvPTAT - 2048;
-    }
-    KvPTAT = KvPTAT/4096;
-    
-    KtPTAT = eeData[42];
-    if(KtPTAT > 1023)
-    {
-        KtPTAT = KtPTAT - 2048;
-    }
-    KtPTAT = KtPTAT/8;
-    
-    vPTAT25 = 32 * eeData[40] + eeData[41];
-    
-    alphaPTAT = eeData[44] / 128.0f;
-    
-    mlx90641->KvPTAT = KvPTAT;
-    mlx90641->KtPTAT = KtPTAT;    
-    mlx90641->vPTAT25 = vPTAT25;
-    mlx90641->alphaPTAT = alphaPTAT;   
-}
 
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractGainParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    int16_t gainEE;
-    
-    gainEE = 32 * eeData[36] + eeData[37];
-
-    mlx90641->gainEE = gainEE;    
-}
-
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractTgcParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    float tgc;
-    tgc = eeData[51] & 0x01FF;
-    if(tgc > 255)
-    {
-        tgc = tgc - 512;
-    }
-    tgc = tgc / 64.0f;
-    
-    mlx90641->tgc = tgc;        
-}
-
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractEmissivityParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    float emissivity;
-    emissivity = eeData[35];
-       
-    if(emissivity > 1023)
-    {
-        emissivity = emissivity - 2048;
-    }
-    emissivity = emissivity/512;
-    
-    mlx90641->emissivityEE = emissivity;
-}
-    
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractResolutionParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    uint8_t resolutionEE;
-    resolutionEE = (eeData[51] & 0x0600) >> 9;    
-    
-    mlx90641->resolutionEE = resolutionEE;
-}
-
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractKsTaParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    float KsTa;
-    KsTa = eeData[34];
-    if(KsTa > 1023)
-    {
-        KsTa = KsTa - 2048;
-    }
-    KsTa = KsTa / 32768.0f;
-    
-    mlx90641->KsTa = KsTa;
-}
-
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractKsToParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    int KsToScale;
-    
-    mlx90641->ct[0] = -40;
-    mlx90641->ct[1] = -20;
-    mlx90641->ct[2] = 0;
-    mlx90641->ct[3] = 80;
-    mlx90641->ct[4] = 120;
-    mlx90641->ct[5] = eeData[58];
-    mlx90641->ct[6] = eeData[60];
-    mlx90641->ct[7] = eeData[62];
-     
-    KsToScale = eeData[52];
-    KsToScale = 1 << KsToScale;
-    
-    mlx90641->ksTo[0] = eeData[53];
-    mlx90641->ksTo[1] = eeData[54];
-    mlx90641->ksTo[2] = eeData[55];
-    mlx90641->ksTo[3] = eeData[56];
-    mlx90641->ksTo[4] = eeData[57];
-    mlx90641->ksTo[5] = eeData[59];
-    mlx90641->ksTo[6] = eeData[61];
-    mlx90641->ksTo[7] = eeData[63];
-    
-    
-    for(int i = 0; i < 8; i++)
-    {
-        if(mlx90641->ksTo[i] > 1023)
+        ktaScale1 = 0;
+        while(temp < 64)
         {
-            mlx90641->ksTo[i] = mlx90641->ksTo[i] - 2048;
-        }
-        mlx90641->ksTo[i] = mlx90641->ksTo[i] / KsToScale;
-    } 
-}
-
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractAlphaParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    float rowMaxAlphaNorm[6];
-    uint16_t scaleRowAlpha[6];
-    uint8_t alphaScale;
-    float alphaTemp[192];
-    float temp;
-    int p = 0;
-
-    scaleRowAlpha[0] = (eeData[25] >> 5) + 20;
-    scaleRowAlpha[1] = (eeData[25] & 0x001F) + 20;
-    scaleRowAlpha[2] = (eeData[26] >> 5) + 20;
-    scaleRowAlpha[3] = (eeData[26] & 0x001F) + 20;
-    scaleRowAlpha[4] = (eeData[27] >> 5) + 20;
-    scaleRowAlpha[5] = (eeData[27] & 0x001F) + 20;
-
-    
-    for(int i = 0; i < 6; i++)
-    {
-        rowMaxAlphaNorm[i] = eeData[28 + i] / pow(2,(double)scaleRowAlpha[i]);
-        rowMaxAlphaNorm[i] = rowMaxAlphaNorm[i] / 2047.0f;
-    }
-
-    for(int i = 0; i < 6; i++)
-    {
-        for(int j = 0; j < 32; j ++)
+            temp = temp*2;
+            ktaScale1 = ktaScale1 + 1;
+        }    
+         
+        for(int i = 0; i < 192; i++)
         {
-            p = 32 * i +j;
-            alphaTemp[p] = eeData[256 + p] * rowMaxAlphaNorm[i]; 
-            alphaTemp[p] = alphaTemp[p] - mlx90641->tgc * mlx90641->cpAlpha;
-            alphaTemp[p] = SCALEALPHA/alphaTemp[p];
-        }
-    }
-    
-    temp = alphaTemp[0];
-    for(int i = 1; i < 192; i++)
-    {
-        if (alphaTemp[i] > temp)
-        {
-            temp = alphaTemp[i];
-        }
-    }
-    
-    alphaScale = 0;
-    while(temp < 32768)
-    {
-        temp = temp*2;
-        alphaScale = alphaScale + 1;
-    } 
-    
-    for(int i = 0; i < 192; i++)
-    {
-        temp = alphaTemp[i] * pow(2,(double)alphaScale);        
-        mlx90641->alpha[i] = (temp + 0.5);        
-        
-    } 
-    
-    mlx90641->alphaScale = alphaScale;      
-}
-
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractOffsetParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    int scaleOffset;
-    int16_t offsetRef;
-    int16_t tempOffset; 
-    
-    scaleOffset = eeData[16] >> 5;
-    scaleOffset = 1 << scaleOffset;
-
-    offsetRef = 32 * eeData[17] + eeData[18];
-    if (offsetRef > 32767)
-    {
-        offsetRef = offsetRef - 65536;
-    }
-
-    for(int i = 0; i < 192; i++)
-    {
-        tempOffset = eeData[64 + i];
-        if(tempOffset > 1023)
-        {
-           tempOffset = eeData[64 + i] - 2048; 
-        }
-        mlx90641->offset[0][i] = tempOffset * scaleOffset + offsetRef;
-        
-        tempOffset = eeData[640 + i];
-        if(tempOffset > 1023)
-        {
-           tempOffset = eeData[640 + i] - 2048; 
-        }
-        mlx90641->offset[1][i] = tempOffset * scaleOffset + offsetRef;
-    }
-}
-
-//------------------------------------------------------------------------------
-
-void MLX90641_ExtractKtaPixelParameters(uint16_t *eeData, paramsMLX90641 *mlx90641)
-{
-    uint8_t ktaScale1;
-    uint8_t ktaScale2;
-    int16_t ktaAvg;
-    int16_t tempKta;
-    float ktaTemp[192];
-    float temp;
-
-    ktaAvg = eeData[21];
-    if (ktaAvg > 1023)
-    {
-        ktaAvg = ktaAvg - 2048;
-    }
-  
-    ktaScale1 = eeData[22] >> 5;
-    ktaScale2 = eeData[22] & 0x001F;
-
-    for(int i = 0; i < 192; i++)
-    {
-        tempKta = (eeData[448 + i] >> 5);
-        if (tempKta > 31)
-        {
-            tempKta = tempKta - 64;
-        }
-
-        ktaTemp[i] = tempKta * pow(2,(double)ktaScale2);
-        ktaTemp[i] = ktaTemp[i] + ktaAvg;
-        ktaTemp[i] = ktaTemp[i] / pow(2,(double)ktaScale1);
-    }
-    
-    temp = fabs(ktaTemp[0]);
-    for(int i = 1; i < 192; i++)
-    {
-        if (fabs(ktaTemp[i]) > temp)
-        {
-            temp = fabs(ktaTemp[i]);
-        }
-    }
-    
-    ktaScale1 = 0;
-    while(temp < 64)
-    {
-        temp = temp*2;
-        ktaScale1 = ktaScale1 + 1;
-    }    
-     
-    for(int i = 0; i < 192; i++)
-    {
-        temp = ktaTemp[i] * pow(2,(double)ktaScale1);
-        if (temp < 0)
-        {
-            mlx90641->kta[i] = (temp - 0.5);
-        }
-        else
-        {
+            temp = ktaTemp[i] * pow(2,(double)ktaScale1);
+            if (temp < 0)
+            {
+                mlx90641->kta[i] = (temp - 0.5);
+            }
+            else
+            {
             mlx90641->kta[i] = (temp + 0.5);
         }        
         
@@ -1212,4 +932,4 @@ int MLX90641_ExtractDeviatingPixels(uint16_t *eeData, paramsMLX90641 *mlx90641)
      }
      
      return -7;    
- }        
+ }

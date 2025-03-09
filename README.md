@@ -9,24 +9,29 @@ The inspiration for this product came from  [Melexis's mlx90640](https://github.
 The IR thermal camera carries a 32x24 array of thermal sensors (MLX90640), it can detect the temperature of objects from feet away with the accuracy of ±1.5℃. In order to obtain the thermal image easily, I2C protocol is used to get the low-resolution image from the camera.
 
 This module connects the MCU with the I2C interface. However, it needs an MCU which has over 20000 bytes of RAM to drive the camera. As a matter of fact, Dev board like Arduino Uno can not be used with this Sensor camera due to its lower ability of calculation. We recommend you to choose Arch Mix as an MCU to control the camera because it really has a good performance to process the complex data from the IR sensor camera.
-![](https://raw.githubusercontent.com/SeeedDocument/IR-thermal-imaging-sensor-MLX90640-/master/114020142-previewbig.jpg)
+![Grove - Thermal Imaging Camera](https://raw.githubusercontent.com/SeeedDocument/IR-thermal-imaging-sensor-MLX90640-/master/114020142-previewbig.jpg)
 
-## Note:
+## Note
+
 - **Visualization** The visual effect is as follows, you can use the following command to install his upper computer on the raspberry PI or PC
-```
+
+```bash
+pip3 install seeed_python_ircamera
+```bash
 pip3 install seeed_python_ircamera
 
-#PortName is like COM1,COM2 in Windows system.
-#MLX90640 is an optional chip type , MLX90640 or MLX90641 can be supported for now.
+# PortName is like COM1,COM2 in Windows system
+
+# MLX90640 is an optional chip type , MLX90640 or MLX90641 can be supported for now
+
 ircamera PortName MLX90640
-``` 
 
-![](https://raw.githubusercontent.com/SeeedDocument/IR-thermal-imaging-sensor-MLX90640-/master/20191121_173909.gif)
+```
 
-
+![Thermal Imaging Camera Visualization](https://raw.githubusercontent.com/SeeedDocument/IR-thermal-imaging-sensor-MLX90640-/master/20191121_173909.gif)
 
 _______________
-This software is written by Baozhu baozhu.zuo@gmail.com for seeed studio
+This software is written by Baozhu <baozhu.zuo@gmail.com> for seeed studio
 and is licensed under The MIT License. Check License.txt for more information.
 
 Contributing to this software is warmly welcomed. You can do this basically by

@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+#include <cstdint>
 #ifndef _MLX641_API_H_
 #define _MLX641_API_H_
 
@@ -66,4 +67,19 @@
     float MLX90641_GetEmissivity(const paramsMLX90641 *mlx90641);
     void MLX90641_BadPixelsCorrection(uint16_t *pixels, float *to, paramsMLX90641 *params);
     
+    void MLX90641_ExtractVDDParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractPTATParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractGainParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractTgcParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractEmissivityParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractResolutionParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractKsTaParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractKsToParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractAlphaParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractOffsetParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractKtaPixelParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractKvPixelParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    void MLX90641_ExtractCPParameters(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    int MLX90641_ExtractDeviatingPixels(uint16_t *eeData, paramsMLX90641 *mlx90641);
+    int MLX90641_HammingDecode(uint16_t *eeData);  
 #endif

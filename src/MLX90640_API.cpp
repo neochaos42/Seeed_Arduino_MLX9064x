@@ -18,22 +18,6 @@
 #include "MLX90640_API.h"
 #include <math.h>
 
-void ExtractVDDParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractPTATParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractGainParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractTgcParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractResolutionParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractKsTaParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractKsToParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractAlphaParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractOffsetParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractKtaPixelParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractKvPixelParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractCPParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-void ExtractCILCParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
-int ExtractDeviatingPixels(uint16_t* eeData, paramsMLX90640* mlx90640);
-int CheckAdjacentPixels(uint16_t pix1, uint16_t pix2);
-int CheckEEPROMValid(uint16_t* eeData);
 
 
 int MLX90640_DumpEE(uint8_t slaveAddr, uint16_t* eeData) {
@@ -542,7 +526,7 @@ void ExtractPTATParameters(uint16_t* eeData, paramsMLX90640* mlx90640) {
 //------------------------------------------------------------------------------
 
 void ExtractGainParameters(uint16_t* eeData, paramsMLX90640* mlx90640) {
-    int16_t gainEE;
+    uint16_t gainEE;
 
     gainEE = eeData[48];
     if (gainEE > 32767) {
@@ -687,7 +671,7 @@ void ExtractOffsetParameters(uint16_t* eeData, paramsMLX90640* mlx90640) {
     int occRow[24];
     int occColumn[32];
     int p = 0;
-    int16_t offsetRef;
+    uint16_t offsetRef;
     uint8_t occRowScale;
     uint8_t occColumnScale;
     uint8_t occRemScale;
@@ -746,11 +730,11 @@ void ExtractOffsetParameters(uint16_t* eeData, paramsMLX90640* mlx90640) {
 
 void ExtractKtaPixelParameters(uint16_t* eeData, paramsMLX90640* mlx90640) {
     int p = 0;
-    int8_t KtaRC[4];
-    int8_t KtaRoCo;
-    int8_t KtaRoCe;
-    int8_t KtaReCo;
-    int8_t KtaReCe;
+    uint8_t KtaRC[4];
+    uint8_t KtaRoCo;
+    uint8_t KtaRoCe;
+    uint8_t KtaReCo;
+    uint8_t KtaReCe;
     uint8_t ktaScale1;
     uint8_t ktaScale2;
     uint8_t split;

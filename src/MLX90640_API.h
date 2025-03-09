@@ -14,6 +14,7 @@
     limitations under the License.
 
 */
+#include <cstdint>
 #ifndef _MLX640_API_H_
 #define _MLX640_API_H_
 
@@ -59,5 +60,22 @@ int MLX90640_GetSubPageNumber(uint16_t* frameData);
 int MLX90640_GetCurMode(uint8_t slaveAddr);
 int MLX90640_SetInterleavedMode(uint8_t slaveAddr);
 int MLX90640_SetChessMode(uint8_t slaveAddr);
+
+void ExtractVDDParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractPTATParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractGainParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractTgcParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractResolutionParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractKsTaParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractKsToParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractAlphaParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractOffsetParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractKtaPixelParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractKvPixelParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractCPParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+void ExtractCILCParameters(uint16_t* eeData, paramsMLX90640* mlx90640);
+int ExtractDeviatingPixels(uint16_t* eeData, paramsMLX90640* mlx90640);
+int CheckAdjacentPixels(uint16_t pix1, uint16_t pix2);
+int CheckEEPROMValid(uint16_t* eeData);
 
 #endif
